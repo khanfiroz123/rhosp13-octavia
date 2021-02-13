@@ -196,14 +196,7 @@ for i in $(openstack baremetal node list -c UUID -c Name -f value | grep -i ceph
 openstack baremetal node show 119a6878-77a3-4d2f-909a-24a5d7304d9f --fit
 management_interface   | None
 ~~~
-### Change the boot order of the overcloud nodes
-~~~
-from host:
-virsh edit overcloud-controller-o
-search /boot and delete
-search for mac address and press 'o' and below that type     <boot order='1'/>
-search for vda and press 'o' and below that type <boot order='2'/>
-~~~
+
 ### Introspect the nodes
 ~~~
 openstack overcloud node introspect --all-manageable --provide
