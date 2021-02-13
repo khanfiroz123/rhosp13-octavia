@@ -1,0 +1,81 @@
+# This file allows IPv6 deployment on tenant networks as well.
+# This should only be used for new deployments and not for upgrade
+# or update.
+resource_registry:
+  # Network Interface templates to use (these files must exist). You can
+  # override these by including one of the net-*.yaml environment files,
+  # such as net-bond-with-vlans-v6.yaml, or modifying the list here.
+  # Port assignments for the Controller
+  OS::TripleO::Controller::Net::SoftwareConfig:
+    ../network/config/single-nic-vlans/controller.yaml
+  # Port assignments for the Compute
+  OS::TripleO::Compute::Net::SoftwareConfig:
+    ../network/config/single-nic-vlans/compute.yaml
+  # Port assignments for the CephStorage
+  OS::TripleO::CephStorage::Net::SoftwareConfig:
+    ../network/config/single-nic-vlans/ceph-storage.yaml
+
+parameter_defaults:
+  # This section is where deployment-specific configuration is done
+  #
+  # NOTE: (Since Rocky)
+  # ControlPlaneSubnetCidr: It is no longer a requirement to provide this
+  #                         parameter. The attribute is resolved from the
+  #                         ctlplane subnet(s).
+  # ControlPlaneDefaultRoute: It is no longer a requirement to provide this
+  #                           parameter. The attribute is resolved from the
+  #                           ctlplane subnet(s).
+  # EC2MetadataIp: It is no longer a requirement to provide this parameter. The
+  #                attribute is resolved from the ctlplane subnet(s).
+  #
+  #
+
+  # Customize the IP subnets to match the local environment
+  StorageNetCidr: ''
+  # Customize the IP range to use for static IPs and VIPs
+  StorageAllocationPools: 
+  # Customize the VLAN ID to match the local environment
+  StorageNetworkVlanID: 30
+
+  # Customize the IP subnets to match the local environment
+  StorageMgmtNetCidr: ''
+  # Customize the IP range to use for static IPs and VIPs
+  StorageMgmtAllocationPools: 
+  # Customize the VLAN ID to match the local environment
+  StorageMgmtNetworkVlanID: 40
+
+  # Customize the IP subnets to match the local environment
+  InternalApiNetCidr: ''
+  # Customize the IP range to use for static IPs and VIPs
+  InternalApiAllocationPools: 
+  # Customize the VLAN ID to match the local environment
+  InternalApiNetworkVlanID: 20
+
+  # Customize the IP subnets to match the local environment
+  TenantNetCidr: ''
+  # Customize the IP range to use for static IPs and VIPs
+  TenantAllocationPools: 
+  # Customize the VLAN ID to match the local environment
+  TenantNetworkVlanID: 50
+
+  # Customize the IP subnets to match the local environment
+  ExternalNetCidr: ''
+  # Customize the IP range to use for static IPs and VIPs
+  # Leave room if the external network is also used for floating IPs
+  ExternalAllocationPools: 
+
+  # Define the DNS servers (maximum 2) for the overcloud nodes
+  # When the list is not set (empty) the nameservers on the ctlplane subnet(s) will be used.
+  # (ctlplane subnet(s) nameservers are confgured by the ``undercloud_nameservers`` option in ``undercloud.conf``)
+  DnsServers: []
+  # List of Neutron network types for tenant networks (will be used in order)
+  NeutronNetworkType: 'vxlan,vlan'
+  # The tunnel type for the tenant network (vxlan or gre). Set to '' to disable tunneling.
+  NeutronTunnelTypes: 'vxlan'
+  # Neutron VLAN ranges per network, for example 'datacentre:1:499,tenant:500:1000':
+  NeutronNetworkVLANRanges: 'datacentre:1:1000'
+  # Customize bonding options, e.g. "mode=4 lacp_rate=1 updelay=1000 miimon=100"
+  # for Linux bonds w/LACP, or "bond_mode=active-backup" for OVS active/backup.
+  BondInterfaceOvsOptions: "bond_mode=active-backup"
+  # Specify Tunnel endpoints to be IPv6
+  NeutronOverlayIPVersion: 6

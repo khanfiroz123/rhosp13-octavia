@@ -1,0 +1,7 @@
+parameter_defaults:
+  ControllerSchedulerHints:
+    'capabilities:node': 'ctrl-%index%'
+  ComputeSchedulerHints:
+    'capabilities:node': 'cmpt-%index%'
+  CephStorageSchedulerHints:
+    'capabilities:node': 'ceph-%index%'

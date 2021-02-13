@@ -1,0 +1,9 @@
+parameter_defaults:
+  OvercloudControllerFlavor: baremetal
+  OvercloudComputeFlavor: baremetal
+  OvercloudCephStorageFlavor: baremetal
+  ControllerCount: 1
+  ComputeCount: 1
+  CephStorageCount: 1
+  NtpServer: 192.168.24.1
+

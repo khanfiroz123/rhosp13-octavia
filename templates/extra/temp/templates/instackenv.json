@@ -1,0 +1,74 @@
+{
+"nodes": [
+{
+"pm_user": "admin",
+"mac": ["52:54:00:01:7a:e5"],
+"pm_type": "pxe_ipmitool",
+"pm_port": "6230",
+"pm_password": "redhat",
+"pm_addr": "192.168.24.250",
+"capabilities" : "node:ctrl-0,boot_option:local",
+"name": "overcloud-controller-0"
+},
+
+{
+"pm_user": "admin",
+"mac": ["52:54:00:54:d9:6d"],
+"pm_type": "pxe_ipmitool",
+"pm_port": "6231",
+"pm_password": "redhat",
+"pm_addr": "192.168.24.250",
+"capabilities" : "node:cmpt-0,boot_option:local",
+"name": "overcloud-compute-0"
+},
+
+{
+"pm_user": "admin",
+"mac": ["52:54:00:84:fa:13"],
+"pm_type": "pxe_ipmitool",
+"pm_port": "6232",
+"pm_password": "redhat",
+"pm_addr": "192.168.24.250",
+"capabilities" : "node:cmpt-1,boot_option:local",
+"name": "overcloud-compute-1"
+},
+
+{
+"pm_user": "admin",
+"mac": ["52:54:00:db:2d:3c"],
+"pm_type": "pxe_ipmitool",
+"pm_port": "6233",
+"pm_password": "redhat",
+"pm_addr": "192.168.24.250",
+"capabilities" : "node:ceph-0,boot_option:local",
+"name": "ceph-0"
+},
+
+{
+"pm_user": "admin",
+"mac": ["52:54:00:f5:58:d7"],
+"pm_type": "pxe_ipmitool",
+"pm_port": "6234",
+"pm_password": "redhat",
+"pm_addr": "192.168.24.250",
+"capabilities" : "node:ceph-1,boot_option:local",
+"name": "ceph-1"
+},
+
+
+{
+"pm_user": "admin",
+"mac": ["52:54:00:43:4c:17"],
+"pm_type": "pxe_ipmitool",
+"pm_port": "6235",
+"pm_password": "redhat",
+"pm_addr": "192.168.24.250",
+"capabilities" : "node:ceph-2,boot_option:local",
+"name": "ceph-2"
+}
+
+]
+}
+
+
+

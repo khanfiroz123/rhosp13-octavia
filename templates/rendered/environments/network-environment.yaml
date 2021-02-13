@@ -1,0 +1,41 @@
+#networks and related parameters.
+resource_registry:
+  OS::TripleO::Controller::Net::SoftwareConfig: /home/stack/templates/nic-config/controller.yaml
+  OS::TripleO::Compute::Net::SoftwareConfig: /home/stack/templates/nic-config/compute.yaml
+  OS::TripleO::CephStorage::Net::SoftwareConfig: /home/stack/templates/nic-config/ceph.yaml
+
+parameter_defaults:
+  ControlPlaneSubnetCidr: '24'
+  ControlPlaneDefaultRoute: 192.168.24.1
+  EC2MetadataIp: 192.168.24.1  # Generally the IP of the Undercloud
+  # Customize the IP subnets to match the local environment
+  StorageNetCidr: '172.16.1.0/24'
+  StorageMgmtNetCidr: '172.16.3.0/24'
+  InternalApiNetCidr: '172.16.2.0/24'
+  TenantNetCidr: '172.16.0.0/24'
+  ExternalNetCidr: '192.168.122.0/24'
+  # Customize the VLAN IDs to match the local environment
+  StorageNetworkVlanID: 20
+  StorageMgmtNetworkVlanID: 40
+  InternalApiNetworkVlanID: 30
+  TenantNetworkVlanID: 50
+  ExternalNetworkVlanID: 10
+  StorageAllocationPools: [{'start': '172.16.1.4', 'end': '172.16.1.250'}]
+  StorageMgmtAllocationPools: [{'start': '172.16.3.4', 'end': '172.16.3.250'}]
+  InternalApiAllocationPools: [{'start': '172.16.2.4', 'end': '172.16.2.250'}]
+  TenantAllocationPools: [{'start': '172.16.0.4', 'end': '172.16.0.250'}]
+  # Leave room if the external network is also used for floating IPs
+  ExternalAllocationPools: [{'start': '192.168.122.4', 'end': '192.168.122.250'}]
+  # Gateway routers for routable networks
+  ExternalInterfaceDefaultRoute: '192.168.122.1'
+  # Define the DNS servers (maximum 2) for the overcloud nodes
+  DnsServers: ["8.8.8.8","8.8.4.4"]
+  # List of Neutron network types for tenant networks (will be used in order)
+  NeutronNetworkType: 'vxlan,vlan'
+  # The tunnel type for the tenant network (vxlan or gre). Set to '' to disable tunneling.
+  NeutronTunnelTypes: 'vxlan'
+  # Neutron VLAN ranges per network, for example 'datacentre:1:499,tenant:500:1000':
+  NeutronNetworkVLANRanges: 'datacentre:1:1000'
+  # Customize bonding options, e.g. "mode=4 lacp_rate=1 updelay=1000 miimon=100"
+  # for Linux bonds w/LACP, or "bond_mode=active-backup" for OVS active/backup.
+  BondInterfaceOvsOptions: "bond_mode=active-backup"

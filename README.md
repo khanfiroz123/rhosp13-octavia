@@ -179,7 +179,6 @@ overcloud-controller-2        |52:54:00:59:e6:e9 |
 }
 ~~~
 
-`
 ### Import the instackenv.json file
 ~~~
 openstack overcloud node import ~/instackenv.json
@@ -187,4 +186,70 @@ openstack overcloud node import ~/instackenv.json
 ### Check the status of the overcloud nodes, it should be in **manageable** mode
 ~~~
 openstack baremetal node list
+~~~
+### Set the first disk of **Ceph node** as root disk
+~~~
+for i in $(openstack baremetal node list -c UUID -c Name -f value | grep -i ceph | awk {'print $1'}) ; do openstack baremetal node set --property root_device='{"name":"/dev/vda"}'  $i ; done
+~~~
+### Verify if the disk set as root disk
+~~~
+openstack baremetal node show 119a6878-77a3-4d2f-909a-24a5d7304d9f --fit
+management_interface   | None
+~~~
+### Change the boot order of the overcloud nodes
+~~~
+from host:
+virsh edit overcloud-controller-o
+search /boot and delete
+search for mac address and press 'o' and below that type     <boot order='1'/>
+search for vda and press 'o' and below that type <boot order='2'/>
+~~~
+### Introspect the nodes
+~~~
+openstack overcloud node introspect --all-manageable --provide
+~~~
+### Check the status of the overcloud nodes, it should be in **available** mode
+~~~
+openstack baremetal node list
+~~~
+### Copy the templates
+~~~
+mkdir templates
+cd /home/stack/templates
+cp -r /usr/share/openstack-tripleo-heat-templates/ .
+~~~
+### Change the network_data.yaml and roles_data.yaml
+
+### Render the network_data.yaml and roles-data.yaml
+~~~
+mkdir /home/stack/templates/rendered
+cd /home/stack/templates/openstack-tripleo-heat-templates
+./tools/process-templates.py -r roles_data.yaml -n network_data.yaml -o /home/stack/templates/rendered  
+~~~
+
+### Change the network-envirnmenet.yaml and roles_data file as per requirement
+
+###Preparing and uploading the containers
+~~~
+mkdir /home/stack/templates/extra/
+touch /home/stack/templates/extra/overcloud_images.yaml
+touch /home/stack/templates/extra/local_registry_images.yaml
+
+sudo openstack overcloud container image prepare --namespace=registry.access.redhat.com/rhosp13  --push-destination=192.168.24.1:8787  --prefix=openstack- --tag-from-label {version}-{release} -e /usr/share/openstack-tripleo-heat-templates/environments/ceph-ansible/ceph-ansible.yaml    --set ceph_namespace=registry.access.redhat.com/rhceph  --set ceph_image=rhceph-3-rhel7  --output-env-file=/home/stack/templates/extra/overcloud_images.yaml --output-images-file /home/stack/templates/extra/local_registry_images.yaml
+~~~
+
+### Deployment subscription
+~~~
+cat v1_deploy.sh
+#!/bin/bash
+time openstack overcloud deploy --templates /home/stack/templates/rendered/ \
+-r /home/stack/templates/rendered/roles_data.yaml \
+-e /home/stack/templates/rendered/environments/network-environment.yaml \
+-e /home/stack/templates/rendered/environments/network-isolation.yaml \
+-e /home/stack/templates/extra/overcloud_images.yaml \
+-e /home/stack/templates/rendered/environments/ceph-ansible/ceph-ansible.yaml \
+-e /home/stack/templates/storage/storageinfo.yaml \
+-e /home/stack/templates/extra/scheduler_hints_env.yaml \
+-e /home/stack/templates/extra/node-info.yaml \
+--libvirt-type qemu --timeout 120 --debug
 ~~~
