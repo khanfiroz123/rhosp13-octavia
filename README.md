@@ -222,13 +222,32 @@ cd /home/stack/templates/openstack-tripleo-heat-templates
 
 ### Change the network-envirnmenet.yaml and roles_data file as per requirement
 
-###Preparing and uploading the containers
+### Create temlates directory
 ~~~
 mkdir /home/stack/templates/extra/
 touch /home/stack/templates/extra/overcloud_images.yaml
 touch /home/stack/templates/extra/local_registry_images.yaml
+~~~
 
-sudo openstack overcloud container image prepare --namespace=registry.access.redhat.com/rhosp13  --push-destination=192.168.24.1:8787  --prefix=openstack- --tag-from-label {version}-{release} -e /usr/share/openstack-tripleo-heat-templates/environments/ceph-ansible/ceph-ansible.yaml    --set ceph_namespace=registry.access.redhat.com/rhceph  --set ceph_image=rhceph-3-rhel7  --output-env-file=/home/stack/templates/extra/overcloud_images.yaml --output-images-file /home/stack/templates/extra/local_registry_images.yaml
+### Preparing containers
+
+~~~
+openstack overcloud container image prepare \
+--namespace=registry.access.redhat.com/rhosp13 \
+--push-destination=192.168.24.1:8787 \
+--prefix=openstack- \
+--tag-from-label {version}-{release} \
+-e /usr/share/openstack-tripleo-heat-templates/environments/ceph-ansible/ceph-ansible.yaml \
+--set ceph_namespace=registry.access.redhat.com/rhceph \
+--set ceph_image=rhceph-3-rhel7 \
+--output-env-file=/home/stack/templates/extra/overcloud_images.yaml \
+--output-images-file /home/stack/templates/extra/local_registry_images.yaml
+~~~
+### Uploading the containers
+
+~~~
+sudo openstack overcloud container image upload \
+--config-file /home/stack/local_registry_images.yaml --verbose
 ~~~
 
 ### Deployment subscription
