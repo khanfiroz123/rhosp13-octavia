@@ -253,6 +253,9 @@ sudo openstack overcloud container image upload \
 ### Deployment subscription
 ~~~
 cat v1_deploy.sh
+~~~
+
+~~~
 #!/bin/bash
 time openstack overcloud deploy --templates /home/stack/templates/rendered/ \
 -r /home/stack/templates/rendered/roles_data.yaml \
