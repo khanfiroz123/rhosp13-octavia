@@ -128,6 +128,8 @@ openstack image list
 ~~~
 for i in $(virsh list --all| egrep -v under | awk {'print $2'} | awk 'NR>2'); do echo $i ;  virsh domiflist $i | egrep -i brbm | awk {'print $5'} ; done > 1.txt ; sed 'N;s/\n/ /'  1.txt > 2.txt ; awk '{printf "%-30s|%-18s|%-20s\n",$1,$2,$3}' 2.txt > 3.txt ; clear ; cat 3.txt
 ~~~
+
+~~~
 overcloud-ceph-0              |52:54:00:e0:99:c5 |                    
 overcloud-ceph-1              |52:54:00:32:80:4d |                    
 overcloud-ceph-2              |52:54:00:9d:c0:66 |                    
@@ -136,6 +138,7 @@ overcloud-compute-1           |52:54:00:b1:e0:78 |
 overcloud-controller-0        |52:54:00:11:7f:e3 |                    
 overcloud-controller-1        |52:54:00:83:7c:fa |                    
 overcloud-controller-2        |52:54:00:59:e6:e9 |  
+~~~
 
 ### Prepare the instackenv.json file, which will be used to introspect the overcloud nodes
 ~~~
