@@ -247,7 +247,7 @@ openstack overcloud container image prepare \
 
 ~~~
 sudo openstack overcloud container image upload \
---config-file /home/stack/local_registry_images.yaml --verbose
+--config-file /home/stack/templates/extra/local_registry_images.yaml --verbose
 ~~~
 
 ### Deployment subscription
